@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A082B5001D7A54AD004282A2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B4FF1D7A54AD004282A2 /* main.cpp */; };
+		A082B5081D7A54C7004282A2 /* BBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5061D7A54C7004282A2 /* BBuffer.cpp */; };
+		A082B50B1D7A5609004282A2 /* semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5091D7A5609004282A2 /* semaphore.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		A082B4FC1D7A54AD004282A2 /* NeoKI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoKI; sourceTree = BUILT_PRODUCTS_DIR; };
 		A082B4FF1D7A54AD004282A2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		A082B5061D7A54C7004282A2 /* BBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBuffer.cpp; sourceTree = "<group>"; };
+		A082B5071D7A54C7004282A2 /* BBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BBuffer.hpp; sourceTree = "<group>"; };
+		A082B5091D7A5609004282A2 /* semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = semaphore.cpp; sourceTree = "<group>"; };
+		A082B50A1D7A5609004282A2 /* semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = semaphore.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				A082B4FF1D7A54AD004282A2 /* main.cpp */,
+				A082B5071D7A54C7004282A2 /* BBuffer.hpp */,
+				A082B5061D7A54C7004282A2 /* BBuffer.cpp */,
+				A082B50A1D7A5609004282A2 /* semaphore.hpp */,
+				A082B5091D7A5609004282A2 /* semaphore.cpp */,
 			);
 			path = NeoKI;
 			sourceTree = "<group>";
@@ -118,6 +128,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A082B50B1D7A5609004282A2 /* semaphore.cpp in Sources */,
+				A082B5081D7A54C7004282A2 /* BBuffer.cpp in Sources */,
 				A082B5001D7A54AD004282A2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
