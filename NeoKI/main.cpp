@@ -16,7 +16,9 @@
 #include <cstring>
 #include <thread>
 #include <cstdio>
+#include <cstddef>
 #include <alloca.h>
+#include <time.h>
 #include "BBuffer.hpp"
 
 #define SIZEOFBUFF 16
@@ -60,6 +62,7 @@ int main(int argc, const char * argv[]) {
     BBuffer bbuffer(SIZEOFBUFF, SIZEOFTYPE);
     thread threads[2];
     Param params[2];
+    size_t tempo[2];
     strcpy(fileName, "/Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/Cube.gcode");
     strcpy(output, "/Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/Cube0.gcode");
     params[0].arq = fopen(fileName, "rt");
@@ -75,11 +78,14 @@ int main(int argc, const char * argv[]) {
     }
     params[0].bbuffer = &bbuffer;
     params[1].bbuffer = &bbuffer;
+    tempo[0] = time(NULL);
     threads[0] = thread(readFile, &params[0]);
     threads[1] = thread(writeFile, &params[1]);
     for (auto& th : threads){
         th.join();
     }
+    tempo[1] = time(NULL);
+    cout << "Tempo de execução: " << tempo[1] - tempo[0] << endl;
     if (fseek(params[0].arq, 0, SEEK_SET) != 0){ //Rewind in file.
         cout << "Erro ao rebobinar o arquivo de entrada.\n";
         return -10;
