@@ -33,7 +33,7 @@
 		A082B5061D7A54C7004282A2 /* BBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBuffer.cpp; sourceTree = "<group>"; };
 		A082B5071D7A54C7004282A2 /* BBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BBuffer.hpp; sourceTree = "<group>"; };
 		A082B5091D7A5609004282A2 /* Semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Semaphore.cpp; sourceTree = "<group>"; };
-		A082B50A1D7A5609004282A2 /* Semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Semaphore.hpp; sourceTree = "<group>"; };
+		A082B50A1D7A5609004282A2 /* semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = semaphore.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +69,7 @@
 				A082B4FF1D7A54AD004282A2 /* main.cpp */,
 				A082B5071D7A54C7004282A2 /* BBuffer.hpp */,
 				A082B5061D7A54C7004282A2 /* BBuffer.cpp */,
-				A082B50A1D7A5609004282A2 /* Semaphore.hpp */,
+				A082B50A1D7A5609004282A2 /* semaphore.hpp */,
 				A082B5091D7A5609004282A2 /* Semaphore.cpp */,
 				A00D536D1D8B961500C3C2AD /* SerialCom.hpp */,
 				A00D536C1D8B961500C3C2AD /* SerialCom.cpp */,

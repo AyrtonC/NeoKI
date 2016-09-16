@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef semaphore_hpp
-#define semaphore_hpp
+#ifndef Semaphore_hpp
+#define Semaphore_hpp
 
 #include <atomic>
 #include <mutex>
