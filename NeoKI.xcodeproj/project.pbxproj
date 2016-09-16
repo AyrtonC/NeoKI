@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A00D536E1D8B961500C3C2AD /* SerialCom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A00D536C1D8B961500C3C2AD /* SerialCom.cpp */; };
 		A082B5001D7A54AD004282A2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B4FF1D7A54AD004282A2 /* main.cpp */; };
 		A082B5081D7A54C7004282A2 /* BBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5061D7A54C7004282A2 /* BBuffer.cpp */; };
-		A082B50B1D7A5609004282A2 /* semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5091D7A5609004282A2 /* semaphore.cpp */; };
+		A082B50B1D7A5609004282A2 /* Semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5091D7A5609004282A2 /* Semaphore.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,12 +26,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A00D536C1D8B961500C3C2AD /* SerialCom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerialCom.cpp; sourceTree = "<group>"; };
+		A00D536D1D8B961500C3C2AD /* SerialCom.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerialCom.hpp; sourceTree = "<group>"; };
 		A082B4FC1D7A54AD004282A2 /* NeoKI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeoKI; sourceTree = BUILT_PRODUCTS_DIR; };
 		A082B4FF1D7A54AD004282A2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		A082B5061D7A54C7004282A2 /* BBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBuffer.cpp; sourceTree = "<group>"; };
 		A082B5071D7A54C7004282A2 /* BBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BBuffer.hpp; sourceTree = "<group>"; };
-		A082B5091D7A5609004282A2 /* semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = semaphore.cpp; sourceTree = "<group>"; };
-		A082B50A1D7A5609004282A2 /* semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = semaphore.hpp; sourceTree = "<group>"; };
+		A082B5091D7A5609004282A2 /* Semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Semaphore.cpp; sourceTree = "<group>"; };
+		A082B50A1D7A5609004282A2 /* Semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Semaphore.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +69,10 @@
 				A082B4FF1D7A54AD004282A2 /* main.cpp */,
 				A082B5071D7A54C7004282A2 /* BBuffer.hpp */,
 				A082B5061D7A54C7004282A2 /* BBuffer.cpp */,
-				A082B50A1D7A5609004282A2 /* semaphore.hpp */,
-				A082B5091D7A5609004282A2 /* semaphore.cpp */,
+				A082B50A1D7A5609004282A2 /* Semaphore.hpp */,
+				A082B5091D7A5609004282A2 /* Semaphore.cpp */,
+				A00D536D1D8B961500C3C2AD /* SerialCom.hpp */,
+				A00D536C1D8B961500C3C2AD /* SerialCom.cpp */,
 			);
 			path = NeoKI;
 			sourceTree = "<group>";
@@ -128,7 +133,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A082B50B1D7A5609004282A2 /* semaphore.cpp in Sources */,
+				A082B50B1D7A5609004282A2 /* Semaphore.cpp in Sources */,
+				A00D536E1D8B961500C3C2AD /* SerialCom.cpp in Sources */,
 				A082B5081D7A54C7004282A2 /* BBuffer.cpp in Sources */,
 				A082B5001D7A54AD004282A2 /* main.cpp in Sources */,
 			);
@@ -251,6 +257,7 @@
 				A082B5051D7A54AD004282A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
