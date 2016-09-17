@@ -19,7 +19,9 @@
 #include <cstddef>
 #include <alloca.h>
 #include <time.h>
+//#include <unistd.h>
 #include "BBuffer.hpp"
+#include "SerialCom.hpp"
 
 #define SIZEOFBUFF 16
 #define SIZEOFTYPE 5000
@@ -56,7 +58,16 @@ void writeFile(Param *par)
 }
 
 int main(int argc, const char * argv[]) {
-    char fileLine[2][SIZEOFTYPE + 1];
+    char in[128];
+    SerialCom port("/dev/cu.usbmodemFD121");
+    port.openPort(115200) == 0 ? cout << "OK\n" : cout << "~OK\n";
+    for (int i = 0; i < 10; i++){
+        //usleep(100000);
+        port.readUntilChar(in, '\r', 127);
+        cout << i << " " << in << endl;
+    }
+    port.closePort();
+    /*char fileLine[2][SIZEOFTYPE + 1];
     char fileName[64];
     char output[64];
     BBuffer bbuffer(SIZEOFBUFF, SIZEOFTYPE);
@@ -105,6 +116,6 @@ int main(int argc, const char * argv[]) {
     }
     fclose(params[0].arq);
     fclose(params[1].arq);
-    cout << "Programa concluído.\n";
+    cout << "Programa concluído.\n";*/
     return 0;
 }
