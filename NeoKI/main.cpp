@@ -66,7 +66,7 @@ int main(int argc, const char * argv[]) {
         port.readUntilChar(in, '\n', 127);
         cout << i << " " << in << endl;
     }
-    port.closePort();
+    //port.closePort();
     /*char fileLine[2][SIZEOFTYPE + 1];
     char fileName[64];
     char output[64];

@@ -21,7 +21,8 @@ SerialCom::SerialCom(std::string serialPort) : _serialPort(serialPort), _fd(0), 
 
 SerialCom::~SerialCom()
 {
-    
+    if (_fd != 0)
+        closePort();
 }
 
 std::string SerialCom::getSerialPort()
@@ -109,6 +110,7 @@ int SerialCom::closePort()
     ret = 0;
     if (_fd != 0){
         ret = close(_fd);
+        _fd = 0;
     }
     return ret;
 }
