@@ -63,7 +63,7 @@ int main(int argc, const char * argv[]) {
     port.openPort(115200) == 0 ? cout << "OK\n" : cout << "~OK\n";
     for (int i = 0; i < 10; i++){
         //usleep(100000);
-        port.readUntilChar(in, '\r', 127);
+        port.readUntilChar(in, '\n', 127);
         cout << i << " " << in << endl;
     }
     port.closePort();
