@@ -1,2 +1,2 @@
-dependencies: /Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/semaphore.cpp \
-  /Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/semaphore.hpp
+dependencies: /Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/Semaphore.cpp \
+  /Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/Semaphore.hpp

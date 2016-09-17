@@ -31,8 +31,9 @@ std::string SerialCom::getSerialPort()
 
 int SerialCom::openPort()
 {
+    _fd = open(_serialPort.c_str(), O_RDWR | O_NONBLOCK);
     
-    return _error;
+    return 0;
 }
 
 void SerialCom::closePort()
