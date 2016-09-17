@@ -29,7 +29,7 @@ class SerialCom{
 private:
     std::string _serialPort;
     int _fd;
-    int _baudRate;
+    speed_t _baudrate;
     int _error;
     struct termios _toptions;
 public:
