@@ -38,7 +38,8 @@ public:
     std::string getSerialPort();
     speed_t getBaudrate();
     int openPort(int baudrate);
-    void closePort();
+    int closePort();
+    int readUntilChar(void *buf, char until, std::size_t buf_max);
 };
 
 #endif /* SerialCom_hpp */

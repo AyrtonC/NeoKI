@@ -103,7 +103,36 @@ int SerialCom::openPort(int baudrate)
     return 0;
 }
 
-void SerialCom::closePort()
+int SerialCom::closePort()
 {
+    int ret;
+    ret = 0;
+    if (_fd != 0){
+        ret = close(_fd);
+    }
+    return ret;
+}
+
+int SerialCom::readUntilChar(void *buf, char until, std::size_t buf_max)
+{
+    ssize_t n;
+    char *_buf;
+    char b[2]; // read expects an array, so we give it a 2-byte array
+    _buf = (char*)buf;
+    b[1] = '\0';
+    int i = 0;
+    do{
+        n = read(_fd, b, 1);  // read a char at a time
+        if(n == -1){
+            return -1;    // couldn't read
+        }
+        if(n == 0){
+            continue;
+        }
+        _buf[i] = b[0];
+        i++;
+    }while(b[0] != until && i < buf_max);
     
+    _buf[i] = '\0';  // null terminate the string*/
+    return 0;
 }
