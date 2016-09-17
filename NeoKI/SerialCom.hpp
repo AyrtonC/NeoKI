@@ -33,10 +33,10 @@ private:
     int _error;
     struct termios _toptions;
 public:
-    SerialCom(std::string serialPort, int baudrate);
+    SerialCom(std::string serialPort);
     ~SerialCom();
     std::string getSerialPort();
-    int openPort();
+    int openPort(int baudrate);
     void closePort();
 };
 

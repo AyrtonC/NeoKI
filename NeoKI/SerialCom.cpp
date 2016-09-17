@@ -14,7 +14,7 @@
 
 #include "SerialCom.hpp"
 
-SerialCom::SerialCom(std::string serialPort, int baudrate) : _serialPort(serialPort), _fd(0), _baudRate(baudrate), _error(0)
+SerialCom::SerialCom(std::string serialPort) : _serialPort(serialPort), _fd(0), _baudRate(0), _error(0)
 {
     
 }
@@ -29,7 +29,7 @@ std::string SerialCom::getSerialPort()
     return _serialPort;
 }
 
-int SerialCom::openPort()
+int SerialCom::openPort(int baudrate)
 {
     _fd = open(_serialPort.c_str(), O_RDWR | O_NONBLOCK);
     
