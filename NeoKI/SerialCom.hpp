@@ -36,6 +36,7 @@ public:
     SerialCom(std::string serialPort);
     ~SerialCom();
     std::string getSerialPort();
+    speed_t getBaudrate();
     int openPort(int baudrate);
     void closePort();
 };

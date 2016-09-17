@@ -29,6 +29,11 @@ std::string SerialCom::getSerialPort()
     return _serialPort;
 }
 
+speed_t SerialCom::getBaudrate()
+{
+    return _baudrate;
+}
+
 int SerialCom::openPort(int baudrate)
 {
     _fd = open(_serialPort.c_str(), O_RDWR | O_NONBLOCK);
