@@ -115,12 +115,13 @@ int SerialCom::closePort()
 
 int SerialCom::readUntilChar(void *buf, char until, std::size_t buf_max)
 {
+    std::size_t i;
     ssize_t n;
     char *_buf;
     char b[2]; // read expects an array, so we give it a 2-byte array
     _buf = (char*)buf;
     b[1] = '\0';
-    int i = 0;
+    i = 0;
     do{
         n = read(_fd, b, 1);  // read a char at a time
         if(n == -1){
