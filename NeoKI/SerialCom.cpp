@@ -35,8 +35,11 @@ speed_t SerialCom::getBaudrate()
     return _baudrate;
 }
 
-int SerialCom::openPort(int baudrate)
+int SerialCom::openPort(unsigned int baudrate)
 {
+    if (_fd != 0){
+        closePort();
+    }
     _fd = open(_serialPort.c_str(), O_RDWR | O_NONBLOCK);
     if(_fd == -1){
         return -1;
@@ -107,10 +110,11 @@ int SerialCom::openPort(int baudrate)
 int SerialCom::closePort()
 {
     int ret;
-    ret = 0;
     if (_fd != 0){
         ret = close(_fd);
         _fd = 0;
+    }else{
+        ret = 0;
     }
     return ret;
 }
