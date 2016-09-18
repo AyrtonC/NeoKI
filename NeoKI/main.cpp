@@ -59,11 +59,14 @@ void writeFile(Param *par)
 
 int main(int argc, const char * argv[]) {
     char in[128];
-    SerialCom port("/dev/cu.usbmodemFD121");
+    SerialCom port("/dev/cu.usbmodemFA131");
     port.openPort(115200) == 0 ? cout << "OK\n" : cout << "~OK\n";
     for (int i = 0; i < 10; i++){
         //usleep(100000);
-        port.readUntilChar(in, '\n', 127);
+        if (port.readUntilChar(in, '\n', 127) == -1){
+            cout << "Error!\n";
+            break;
+        }
         cout << i << " " << in << endl;
     }
     //port.closePort();
