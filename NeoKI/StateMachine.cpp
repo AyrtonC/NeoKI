@@ -36,9 +36,16 @@ StateMachine& StateMachine::self()
     return ret;
 }
 
-int StateMachine::getStats()
+StateFunc StateMachine::readPort()
+{
+    return nullptr;
+}
+
+int StateMachine::getStats(void *par)
 {
     self().characteristics = 0;
+    StateFunc stt;
+    stt = readPort;
     
     return self().characteristics;
 }

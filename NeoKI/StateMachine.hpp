@@ -41,7 +41,7 @@ public:
     void setSerialPort(SerialCom *port);
     static StateMachine& self();
     virtual ~StateMachine();
-    int getStats();
+    int getStats(void *par);
 };
 
 #endif /* StateMachine_hpp */
