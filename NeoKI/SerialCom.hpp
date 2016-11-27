@@ -39,7 +39,13 @@ public:
     speed_t getBaudrate();
     int openPort(unsigned int baudrate);
     int closePort();
-    int readUntilChar(void *buf, char until, std::size_t buf_max);
+    int readUntilChar(char *buf, char until, std::size_t buf_size);
+    ssize_t readBinary(void *buf, std::size_t buf_size);
+    ssize_t writeCharVec(char *buf);
+    ssize_t writeBinary(void *buf, std::size_t buf_size);
+    void flush();
+    int drain();
+    int getError();
 };
 
 #endif /* SerialCom_hpp */

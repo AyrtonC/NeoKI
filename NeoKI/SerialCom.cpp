@@ -42,10 +42,12 @@ int SerialCom::openPort(unsigned int baudrate)
     }
     _fd = open(_serialPort.c_str(), O_RDWR | O_NONBLOCK);
     if(_fd == -1){
+        _error = errno;
         return -1;
     }
     if (tcgetattr(_fd, &_toptions) < 0){
-        return -2;
+        _error = errno;
+        return -1;
     }
     switch(baudrate) {
         case 4800:
@@ -102,44 +104,96 @@ int SerialCom::openPort(unsigned int baudrate)
     _toptions.c_cc[VTIME] = 0;
     tcsetattr(_fd, TCSANOW, &_toptions);
     if(tcsetattr(_fd, TCSAFLUSH, &_toptions) < 0){
-        return -3;
+        _error = errno;
+        return -1;
     }
-    return 0;
+    return drain();
 }
 
 int SerialCom::closePort()
 {
     int ret;
+    ret = 0;
     if (_fd != 0){
+        tcdrain(_fd);
         ret = close(_fd);
         _fd = 0;
-    }else{
-        ret = 0;
     }
     return ret;
 }
 
-int SerialCom::readUntilChar(void *buf, char until, std::size_t buf_max)
+int SerialCom::readUntilChar(char *buf, char until, std::size_t buf_size)
 {
     std::size_t i;
     ssize_t n;
-    char *_buf;
-    char b[2]; // read expects an array, so we give it a 2-byte array
-    _buf = (char*)buf;
-    b[1] = '\0';
-    i = 0;
-    do{
-        n = read(_fd, b, 1);  // read a char at a time
-        if(n == -1){
-            return -1;    // couldn't read
-        }
-        if(n == 0){
+    for (i = 0; i < buf_size; i++){
+        n = read(_fd, &buf[i], 1);
+        if (n == -1){
+            _error = errno;
+            buf[i] = '\0';
+            return -1;
+        }else if(n == 0){
+            i--;
             continue;
+        }else{
+            if (buf[i] == until){
+                buf[i] = '\0';
+                break;
+            }
         }
-        _buf[i] = b[0];
-        i++;
-    }while(b[0] != until && i < buf_max);
-    
-    _buf[i] = '\0';  // null terminate the string*/
+    }
+    if (i == buf_size){
+        buf[i - 1] = '\0';
+    }
     return 0;
+}
+
+ssize_t SerialCom::readBinary(void *buf, std::size_t buf_size)
+{
+    ssize_t ret = read(_fd, buf, buf_size);
+    if (ret == -1){
+        _error = errno;
+        return -1;
+    }
+    return ret;
+}
+
+ssize_t SerialCom::writeCharVec(char *buf)
+{
+    ssize_t ret = write(_fd, buf, strlen(buf));
+    if (ret == -1){
+        _error = errno;
+        return -1;
+    }
+    return ret;
+}
+
+ssize_t SerialCom::writeBinary(void *buf, std::size_t buf_size)
+{
+    ssize_t ret = write(_fd, buf, buf_size);
+    if (ret == -1){
+        _error = errno;
+        return -1;
+    }
+    return ret;
+}
+
+void SerialCom::flush()
+{
+    sleep(2); //required to make flush work in USB serial.
+    tcflush(_fd,TCIOFLUSH);
+}
+
+int SerialCom::drain()
+{
+    if (tcdrain(_fd) < 0){
+        _error = errno;
+        return -1;
+    }
+    return 0;
+}
+
+int SerialCom::getError()
+{
+    return _error;
 }
