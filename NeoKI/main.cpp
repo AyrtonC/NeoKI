@@ -59,17 +59,28 @@ void writeFile(Param *par)
 
 int main(int argc, const char * argv[]) {
     char in[128];
-    SerialCom port("/dev/cu.usbmodemFA131");
-    port.openPort() == 0 ? cout << "OK\n" : cout << "~OK\n";
-    port.setBaudrate(115200);
-    port.makeCanonical();
+    char m115[8];
+    int baudrate;
+    strcpy(m115, "M115\n\r");
+    SerialCom port(argv[1]);
+    sscanf(argv[2], "%d", &baudrate);
+    if (port.openPort() != 0){
+        exit(port.getError());
+    }
+    port.setBaudrate(baudrate);
+    //port.makeCanonical();
+    port.makeRAW();
+    port.drain();
+    while (port.readLine(in, 127) != 0 && strstr(in, "wait") == NULL){
+        cout << in << endl;
+    }
+    cout << "\nREAD\n";
+    port.writeCharVec(m115);
     for (int i = 0; i < 10; i++){
-        //usleep(100000);
-        if (port.readLine(in, 127) == -1){
-            cout << "Error!\n";
+        if (port.readLine(in, 127) == 0){
             break;
         }
-        cout << i << " " << in << endl;
+        cout << in << endl;
     }
     //port.closePort();
     /*char fileLine[2][SIZEOFTYPE + 1];
