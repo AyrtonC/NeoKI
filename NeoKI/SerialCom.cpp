@@ -162,6 +162,7 @@ ssize_t SerialCom::readLine(char *buf, std::size_t buf_size)
 {
     ssize_t tries = 0;
     ssize_t ret = 0;
+    buf[0] = '\0';
     if(_RAWTerminal == 0){
 ReadAgain0:
         ret = read(_fd, buf, buf_size);
