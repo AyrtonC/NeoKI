@@ -72,7 +72,7 @@ int SerialCom::openPort()
     
     _toptions[1].c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
     _toptions[1].c_cc[VMIN]  = 0;
-    _toptions[1].c_cc[VTIME] = 0;
+    _toptions[1].c_cc[VTIME] = 10;
     
     return 0;
 }
@@ -161,22 +161,50 @@ int SerialCom::closePort()
 ssize_t SerialCom::readLine(char *buf, std::size_t buf_size)
 {
     ssize_t tries = 0;
-    ssize_t ret;
+    ssize_t ret = 0;
+    if(_RAWTerminal == 0){
 ReadAgain0:
-    ret = read(_fd, buf, buf_size);
-    if (ret == -1){
-        if (errno == EAGAIN && tries < MAXTRIES){
-            tries++;
-            goto ReadAgain0;
+        ret = read(_fd, buf, buf_size);
+        if (ret == -1){
+            if (errno == EAGAIN && tries < MAXTRIES){
+                tries++;
+                goto ReadAgain0;
+            }
+            _error = errno;
+            return -1;
+        }else if (ret != 0){
+            for (std::size_t i = 0; i < buf_size; i++){
+                if (buf[i] == '\r' || buf[i] == '\n'){
+                    buf[i] = '\0';
+                    break;
+                }
+            }
         }
-        _error = errno;
-        return -1;
-    }else if (ret != 0){
-        for (std::size_t i = 0; i < buf_size; i++){
-            if (buf[i] == '\r' || buf[i] == '\n'){
+    }else if(_RAWTerminal == 1){
+        std::size_t i;
+        for (i = 0; i < buf_size; i++){
+ReadAgain00:
+            ret = read(_fd, &buf[i], 1);
+            if (ret == -1){
+                if (errno == EAGAIN && tries < MAXTRIES){
+                    tries++;
+                    goto ReadAgain00;
+                }
+                _error = errno;
                 buf[i] = '\0';
                 break;
+            }else if(ret == 0){
+                buf[i] = '\0';
+                break;
+            }else{
+                if (buf[i] == '\r' || buf[i] == '\n'){
+                    buf[i] = '\0';
+                    break;
+                }
             }
+        }
+        if (i == buf_size){
+            buf[i - 1] = '\0';
         }
     }
     return ret;
