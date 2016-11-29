@@ -25,27 +25,34 @@
 #include <sys/ioctl.h>
 #include <iostream>
 
+#define MAXTRIES 1000
+
 class SerialCom{
 private:
     std::string _serialPort;
     int _fd;
     speed_t _baudrate;
     int _error;
-    struct termios _toptions;
+    struct termios _toptions[2]; //0 - Canonical, 1 - RAW
+    int _RAWTerminal;
 public:
     SerialCom(std::string serialPort);
     ~SerialCom();
     std::string getSerialPort();
     speed_t getBaudrate();
-    int openPort(unsigned int baudrate);
+    int openPort();
+    bool setBaudrate(int baudrate);
+    int makeRAW();
+    int makeCanonical();
     int closePort();
-    int readUntilChar(char *buf, char until, std::size_t buf_size);
+    ssize_t readLine(char *buf, std::size_t buf_size);
     ssize_t readBinary(void *buf, std::size_t buf_size);
     ssize_t writeCharVec(char *buf);
     ssize_t writeBinary(void *buf, std::size_t buf_size);
     void flush();
     int drain();
     int getError();
+    int isRAWTerminal(); //If return is -1, mode was not set explicitly
 };
 
 #endif /* SerialCom_hpp */

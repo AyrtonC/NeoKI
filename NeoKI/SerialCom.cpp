@@ -14,7 +14,7 @@
 
 #include "SerialCom.hpp"
 
-SerialCom::SerialCom(std::string serialPort) : _serialPort(serialPort), _fd(0), _baudrate(0), _error(0)
+SerialCom::SerialCom(std::string serialPort) : _serialPort(serialPort), _fd(0), _baudrate(0), _error(0), _RAWTerminal(-1)
 {
     
 }
@@ -35,20 +35,50 @@ speed_t SerialCom::getBaudrate()
     return _baudrate;
 }
 
-int SerialCom::openPort(unsigned int baudrate)
+int SerialCom::openPort()
 {
     if (_fd != 0){
         closePort();
     }
-    _fd = open(_serialPort.c_str(), O_RDWR | O_NONBLOCK);
+    
+    _fd = open(_serialPort.c_str(), O_RDWR | O_NOCTTY);
     if(_fd == -1){
         _error = errno;
         return -1;
     }
-    if (tcgetattr(_fd, &_toptions) < 0){
-        _error = errno;
-        return -1;
+    
+    //Setting common terminal configuration
+    for (int i = 0; i < 2; i++){
+        if (tcgetattr(_fd, &_toptions[i]) < 0){
+            _error = errno;
+            return -1;
+        }
+        _toptions[i].c_cflag &= ~PARENB;
+        _toptions[i].c_cflag &= ~CSTOPB;
+        _toptions[i].c_cflag &= ~CSIZE;
+        _toptions[i].c_cflag |= CS8;
     }
+    //Setting first terminal configuration
+    /* Canonical mode */
+    _toptions[0].c_lflag |= ICANON;
+    
+    //Setting second terminal configuration
+    // no flow control
+    _toptions[1].c_cflag &= ~CRTSCTS;
+    _toptions[1].c_cflag |= CREAD | CLOCAL;  // turn on READ & ignore ctrl lines
+    
+    _toptions[1].c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
+    _toptions[1].c_oflag &= ~OPOST; // make raw
+    
+    _toptions[1].c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
+    _toptions[1].c_cc[VMIN]  = 0;
+    _toptions[1].c_cc[VTIME] = 0;
+    
+    return 0;
+}
+
+bool SerialCom::setBaudrate(int baudrate)
+{
     switch(baudrate) {
         case 4800:
             _baudrate = B4800;
@@ -87,27 +117,33 @@ int SerialCom::openPort(unsigned int baudrate)
             _baudrate = baudrate;
             break;
     }
-    cfsetispeed(&_toptions, _baudrate);
-    cfsetospeed(&_toptions, _baudrate);
-    _toptions.c_cflag &= ~PARENB;
-    _toptions.c_cflag &= ~CSTOPB;
-    _toptions.c_cflag &= ~CSIZE;
-    _toptions.c_cflag |= CS8;
-    // no flow control
-    _toptions.c_cflag &= ~CRTSCTS;
-    _toptions.c_cflag |= CREAD | CLOCAL;  // turn on READ & ignore ctrl lines
-    _toptions.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
-    
-    _toptions.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
-    _toptions.c_oflag &= ~OPOST; // make raw
-    _toptions.c_cc[VMIN]  = 0;
-    _toptions.c_cc[VTIME] = 0;
-    tcsetattr(_fd, TCSANOW, &_toptions);
-    if(tcsetattr(_fd, TCSAFLUSH, &_toptions) < 0){
+    for (int i = 0; i < 2; i++){
+        cfsetispeed(&_toptions[i], _baudrate);
+        cfsetospeed(&_toptions[i], _baudrate);
+    }
+    return true;
+}
+
+int SerialCom::makeRAW()
+{
+    tcsetattr(_fd, TCSANOW, &_toptions[1]);
+    if(tcsetattr(_fd, TCSAFLUSH, &_toptions[1]) < 0){
         _error = errno;
         return -1;
     }
-    return drain();
+    _RAWTerminal = 1;
+    return 0;
+}
+
+int SerialCom::makeCanonical()
+{
+    tcsetattr(_fd, TCSANOW, &_toptions[0]);
+    if(tcsetattr(_fd, TCSAFLUSH, &_toptions[0]) < 0){
+        _error = errno;
+        return -1;
+    }
+    _RAWTerminal = 0;
+    return 0;
 }
 
 int SerialCom::closePort()
@@ -122,36 +158,42 @@ int SerialCom::closePort()
     return ret;
 }
 
-int SerialCom::readUntilChar(char *buf, char until, std::size_t buf_size)
+ssize_t SerialCom::readLine(char *buf, std::size_t buf_size)
 {
-    std::size_t i;
-    ssize_t n;
-    for (i = 0; i < buf_size; i++){
-        n = read(_fd, &buf[i], 1);
-        if (n == -1){
-            _error = errno;
-            buf[i] = '\0';
-            return -1;
-        }else if(n == 0){
-            i--;
-            continue;
-        }else{
-            if (buf[i] == until){
+    ssize_t tries = 0;
+    ssize_t ret;
+    ReadAgain0:
+    ret = read(_fd, buf, buf_size);
+    if (ret == -1){
+        if (errno == EAGAIN && tries < MAXTRIES){
+            tries++;
+            goto ReadAgain0;
+        }
+        _error = errno;
+        return -1;
+    }else if (ret != 0){
+        for (std::size_t i = 0; i < buf_size; i++){
+            if (buf[i] == '\r' || buf[i] == '\n'){
                 buf[i] = '\0';
                 break;
             }
         }
     }
-    if (i == buf_size){
-        buf[i - 1] = '\0';
-    }
-    return 0;
+    return ret;
 }
 
 ssize_t SerialCom::readBinary(void *buf, std::size_t buf_size)
 {
-    ssize_t ret = read(_fd, buf, buf_size);
+    size_t times = 0;
+    ssize_t ret;
+ReadAgain1:
+    memset(buf, '\0', buf_size); //Cleans the buffer
+    ret = read(_fd, buf, buf_size);
     if (ret == -1){
+        if (errno == EAGAIN && times < MAXTRIES){
+            times++;
+            goto ReadAgain1;
+        }
         _error = errno;
         return -1;
     }
@@ -196,4 +238,10 @@ int SerialCom::drain()
 int SerialCom::getError()
 {
     return _error;
+}
+
+
+int SerialCom::isRAWTerminal()
+{
+    return _RAWTerminal;
 }
