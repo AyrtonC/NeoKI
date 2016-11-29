@@ -162,7 +162,7 @@ ssize_t SerialCom::readLine(char *buf, std::size_t buf_size)
 {
     ssize_t tries = 0;
     ssize_t ret;
-    ReadAgain0:
+ReadAgain0:
     ret = read(_fd, buf, buf_size);
     if (ret == -1){
         if (errno == EAGAIN && tries < MAXTRIES){
