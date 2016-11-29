@@ -29,7 +29,7 @@
 using namespace std;
 
 typedef struct param{
-    BBuffer *bbuffer;
+    BBuffer bbuffer;
     FILE *arq;
 }Param;
 
@@ -37,10 +37,10 @@ void readFile(Param *par)
 {
     char in[SIZEOFTYPE + 1];
     while (fscanf(par->arq, "%5000[^\n]\n", in) != EOF){
-        par->bbuffer->enqueue(in);
+        par->bbuffer.enqueue(in);
     }
     strcpy(in, "EOF");
-    par->bbuffer->enqueue(in);
+    par->bbuffer.enqueue(in);
 }
 
 void writeFile(Param *par)
@@ -48,7 +48,7 @@ void writeFile(Param *par)
     char *out;
     out = (char*)alloca((SIZEOFTYPE + 1) * sizeof(char));
     while (true){
-        par->bbuffer->dequeue((void**)&out);
+        par->bbuffer.dequeue((void**)&out);
         if (strcmp(out, "EOF") != 0){
             fprintf(par->arq, "%s\n", out);
         }else{
@@ -60,10 +60,12 @@ void writeFile(Param *par)
 int main(int argc, const char * argv[]) {
     char in[128];
     SerialCom port("/dev/cu.usbmodemFA131");
-    port.openPort(115200) == 0 ? cout << "OK\n" : cout << "~OK\n";
+    port.openPort() == 0 ? cout << "OK\n" : cout << "~OK\n";
+    port.setBaudrate(115200);
+    port.makeCanonical();
     for (int i = 0; i < 10; i++){
         //usleep(100000);
-        if (port.readUntilChar(in, '\n', 127) == -1){
+        if (port.readLine(in, 127) == -1){
             cout << "Error!\n";
             break;
         }
