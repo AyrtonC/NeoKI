@@ -58,7 +58,7 @@ void writeFile(Param *par)
 }
 
 int main(int argc, const char * argv[]) {
-    char in[128];
+    char in[1024];
     char m115[8];
     int baudrate;
     strcpy(m115, "M115\n\r");
@@ -68,19 +68,22 @@ int main(int argc, const char * argv[]) {
         exit(port.getError());
     }
     port.setBaudrate(baudrate);
-    //port.makeCanonical();
-    port.makeRAW();
+    port.makeCanonical();
+    //port.makeRAW(0, 11);
     port.drain();
-    while (port.readLine(in, 127) != 0 && strstr(in, "wait") == NULL){
+    while (port.readLine(in, 1023) != 0 && strstr(in, "wait") == NULL){
         cout << in << endl;
     }
     cout << "\nREAD\n";
     port.writeCharVec(m115);
     for (int i = 0; i < 10; i++){
-        if (port.readLine(in, 127) == 0){
+        baudrate = (int)port.readLine(in, 1023);
+        if (baudrate == 0){
             break;
+        }else if (baudrate < 0){
+            exit(port.getError());
         }
-        cout << in << endl;
+        cout << i << " " <<in << endl;
     }
     //port.closePort();
     /*char fileLine[2][SIZEOFTYPE + 1];
