@@ -26,8 +26,8 @@ private:
     Semaphore _full;
     std::size_t _toSend;
     std::size_t _sent;
-    std::size_t _sizeOfBuffer;
-    std::size_t _sizeOfType;
+    const std::size_t _sizeOfBuffer;
+    const std::size_t _sizeOfType;
     void *info;
     
 public:
