@@ -4,3 +4,25 @@
 NeoKI/Complile_NeoKI.txt
 
 NeoKI/test.sh
+
+*.xcactivitylog
+
+DerivedData/NeoKI/Build/Intermediates/NeoKI.build/Debug/NeoKI.build/dgph
+
+DerivedData/NeoKI/Build/Intermediates/NeoKI.build/Debug/NeoKI.build/dgph~
+
+*.o
+
+DerivedData/NeoKI/Build/Products/Debug/NeoKI
+
+*.xcindexdb
+
+*.xcindexdb-wal
+
+*.plist
+
+*.db
+
+*.xcactivitylog
+
+*.db
