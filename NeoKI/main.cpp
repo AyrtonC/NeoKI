@@ -19,7 +19,7 @@
 #include <cstddef>
 #include <alloca.h>
 #include <time.h>
-//#include <unistd.h>
+#include <unistd.h>
 #include "BBuffer.hpp"
 #include "SerialCom.hpp"
 
@@ -28,36 +28,26 @@
 
 using namespace std;
 
+BBuffer bbuffer(SIZEOFBUFF, SIZEOFTYPE);
+
 typedef struct param{
-    BBuffer bbuffer;
+    SerialCom *port;
     FILE *arq;
 }Param;
 
 void readFile(Param *par)
 {
-    char in[SIZEOFTYPE + 1];
-    while (fscanf(par->arq, "%5000[^\n]\n", in) != EOF){
-        par->bbuffer.enqueue(in);
-    }
-    strcpy(in, "EOF");
-    par->bbuffer.enqueue(in);
+    
 }
 
-void writeFile(Param *par)
+void writeToPrinter(Param *par)
 {
-    char *out;
-    out = (char*)alloca((SIZEOFTYPE + 1) * sizeof(char));
-    while (true){
-        par->bbuffer.dequeue((void**)&out);
-        if (strcmp(out, "EOF") != 0){
-            fprintf(par->arq, "%s\n", out);
-        }else{
-            break;
-        }
-    }
+    
 }
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char * argv[])
+{
+    Param par[2];
     char in[1024];
     char m115[8];
     int baudrate;
@@ -68,8 +58,8 @@ int main(int argc, const char * argv[]) {
         exit(port.getError());
     }
     port.setBaudrate(baudrate);
-    //port.makeCanonical();
-    port.makeRAW(0, 11);
+    port.makeCanonical();
+    //port.makeRAW(0, 11);
     port.drain();
     while (port.readLine(in, 1023) != 0 && strstr(in, "wait") == NULL){
         cout << in << endl;
@@ -78,61 +68,20 @@ int main(int argc, const char * argv[]) {
     port.writeCharVec(m115);
     for (int i = 0; i < 10; i++){
         baudrate = (int)port.readLine(in, 1023);
+        if (baudrate == 0 || strstr(in, "wait") != NULL){
+            break;
+        }
         if (baudrate < 0){
             exit(port.getError());
         }
         cout << i << " " <<in << endl;
     }
-    //port.closePort();
-    /*char fileLine[2][SIZEOFTYPE + 1];
-    char fileName[64];
-    char output[64];
-    BBuffer bbuffer(SIZEOFBUFF, SIZEOFTYPE);
-    thread threads[2];
-    Param params[2];
-    size_t tempo[2];
-    strcpy(fileName, "/Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/Cube.gcode");
-    strcpy(output, "/Users/ayrtex/Documents/Habilite/NeoKI/NeoKI/Cube0.gcode");
-    params[0].arq = fopen(fileName, "rt");
-    if (params[0].arq == NULL){
-        printf("Arquivo não encontrado.\n");
-        return 1;
+    par[0].arq = fopen("../../../../../NeoKI/r2d2.gcode", "rt");
+    if (par[0].arq == NULL){
+        cout << "Error\n";
+        exit(errno);
     }
-    params[1].arq = fopen(output, "w+");
-    if (params[1].arq == NULL){
-        printf("Não foi possível criar o arquivo.\n");
-        fclose(params[0].arq);
-        return 2;
-    }
-    params[0].bbuffer = &bbuffer;
-    params[1].bbuffer = &bbuffer;
-    tempo[0] = time(NULL);
-    threads[0] = thread(readFile, &params[0]);
-    threads[1] = thread(writeFile, &params[1]);
-    for (auto& th : threads){
-        th.join();
-    }
-    tempo[1] = time(NULL);
-    cout << "Tempo de execução: " << tempo[1] - tempo[0] << endl;
-    if (fseek(params[0].arq, 0, SEEK_SET) != 0){ //Rewind in file.
-        cout << "Erro ao rebobinar o arquivo de entrada.\n";
-        return -10;
-    }
-    if (fseek(params[1].arq, 0, SEEK_SET) != 0){ //Rewind out file.
-        cout << "Erro ao rebobinar o arquivo de saída.\n";
-        return -11;
-    }
-    for (int i = 0; fscanf(params[0].arq, "%5000[^\n]\n", fileLine[0]) != EOF; ++i){
-        fscanf(params[1].arq, "%5000[^\n]\n", fileLine[1]);
-        if (strcmp(fileLine[0], fileLine[1]) != 0){
-            printf("Linha %d com conteúdo incongruente.\nCONTEÚDO ARQUIVO 1: %s\nCONTEÚDO ARQUIVO 2:%s\n", i + 1, fileLine[0], fileLine[1]);
-            fclose(params[0].arq);
-            fclose(params[1].arq);
-            return -3;
-        }
-    }
-    fclose(params[0].arq);
-    fclose(params[1].arq);
-    cout << "Programa concluído.\n";*/
+    par[1].port = &port;
+    
     return 0;
 }
