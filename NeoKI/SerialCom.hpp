@@ -25,7 +25,7 @@
 #include <sys/ioctl.h>
 #include <iostream>
 
-#define MAXTRIES 1000
+#define MAXTRIES 3
 
 class SerialCom{
 private:
@@ -38,21 +38,73 @@ private:
 public:
     SerialCom(std::string serialPort);
     ~SerialCom();
+    
+    // getSerialPort - returns a string with the serial port path.
     std::string getSerialPort();
+    
+    // getBaudrate - returns a speed_t containing the speed of the port.
     speed_t getBaudrate();
+    
+    // openPort - open the serial port, return -1 in case of error.
     int openPort();
+    
+    /* setBaudrate - sets port baudrate (speed), return -1 in case of error.
+     Parameters:
+        baudrate - The speed of the port, must be positive. */
     bool setBaudrate(int baudrate);
-    int makeRAW();
+    
+    /* makeRAW - configures a port to work in RAW mode, return -1 in case of error.
+     Parameters:
+        minBytes - The minimum numbers of bytes to be read.
+        waitTime - The maximum time to wait for input. */
+    int makeRAW(unsigned char minBytes, unsigned char waitTime);
+    
+    //makeCanonical - configures a port to work in Canonical mode, return -1 in case of error.
     int makeCanonical();
+    
+    //closePort - Closes the port, return -1 in case of error.
     int closePort();
+    
+    /* readLine - attempt to read a line ended in \n and returns the number of bytes read.
+     Return the number of bytes read, or -1 in case of error.
+     Parameters:
+        buf - char vector.
+        buf_size - Size of the vector. */
     ssize_t readLine(char *buf, std::size_t buf_size);
+    
+    /* readBinary - attempt read n bytes from the port.
+     Return the number of bytes read, or -1 in case of error.
+     Parameters:
+        buf - space in memory.
+        buf_size - size of the space. */
     ssize_t readBinary(void *buf, std::size_t buf_size);
+    
+    /* writeCharVec - write a C string ended in NULL character.
+     Return the number of bytes written, or -1 in case of error.
+     Parameters:
+        buf - NULL terminated string. */
     ssize_t writeCharVec(char *buf);
+    
+    /* writeBinary - attempt to write n bytes to the port.
+     Return the number of bytes written, or -1 in case of error.
+     Parameters:
+        buf - space in memory.
+        buf_size - number of bytes to be written. */
     ssize_t writeBinary(void *buf, std::size_t buf_size);
+    
+    // flush - flush the port content.
     void flush();
+    
+    //drain - drain the port content.
     int drain();
+    
+    // getError - return the error code of the last recorded error.
+    // Definitions are found in errno header.
     int getError();
-    int isRAWTerminal(); //If return is -1, mode was not set explicitly
+    
+    //isRAWTerminal - return a int witch tells the current mode.
+    //-1 - mode was not set explicitly, 0 - Canonical mode, 1 - RAW mode.
+    int isRAWTerminal();
 };
 
 #endif /* SerialCom_hpp */
