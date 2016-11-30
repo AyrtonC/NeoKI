@@ -72,7 +72,7 @@ int SerialCom::openPort()
     
     _toptions[1].c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
     _toptions[1].c_cc[VMIN]  = 0;
-    _toptions[1].c_cc[VTIME] = 10;
+    _toptions[1].c_cc[VTIME] = 0;
     
     return 0;
 }
@@ -124,8 +124,10 @@ bool SerialCom::setBaudrate(int baudrate)
     return true;
 }
 
-int SerialCom::makeRAW()
+int SerialCom::makeRAW(unsigned char minBytes, unsigned char waitTime)
 {
+    _toptions[1].c_cc[VMIN]  = minBytes;
+    _toptions[1].c_cc[VTIME] = waitTime;
     tcsetattr(_fd, TCSANOW, &_toptions[1]);
     if(tcsetattr(_fd, TCSAFLUSH, &_toptions[1]) < 0){
         _error = errno;
@@ -169,13 +171,14 @@ ReadAgain0:
         if (ret == -1){
             if (errno == EAGAIN && tries < MAXTRIES){
                 tries++;
+                sleep(1);
                 goto ReadAgain0;
             }
             _error = errno;
             return -1;
         }else if (ret != 0){
             for (std::size_t i = 0; i < buf_size; i++){
-                if (buf[i] == '\r' || buf[i] == '\n'){
+                if (buf[i] == '\n'){
                     buf[i] = '\0';
                     break;
                 }
@@ -183,22 +186,26 @@ ReadAgain0:
         }
     }else if(_RAWTerminal == 1){
         std::size_t i;
+        ssize_t noOfBytes = 0;
         for (i = 0; i < buf_size; i++){
 ReadAgain00:
             ret = read(_fd, &buf[i], 1);
             if (ret == -1){
                 if (errno == EAGAIN && tries < MAXTRIES){
                     tries++;
+                    sleep(1);
                     goto ReadAgain00;
                 }
                 _error = errno;
                 buf[i] = '\0';
+                noOfBytes = -1;
                 break;
             }else if(ret == 0){
                 buf[i] = '\0';
                 break;
             }else{
-                if (buf[i] == '\r' || buf[i] == '\n'){
+                noOfBytes++;
+                if (buf[i] == '\n'){
                     buf[i] = '\0';
                     break;
                 }
@@ -207,6 +214,7 @@ ReadAgain00:
         if (i == buf_size){
             buf[i - 1] = '\0';
         }
+        ret = noOfBytes;
     }
     return ret;
 }
@@ -216,11 +224,11 @@ ssize_t SerialCom::readBinary(void *buf, std::size_t buf_size)
     size_t times = 0;
     ssize_t ret;
 ReadAgain1:
-    memset(buf, '\0', buf_size); //Cleans the buffer
     ret = read(_fd, buf, buf_size);
     if (ret == -1){
         if (errno == EAGAIN && times < MAXTRIES){
             times++;
+            sleep(1);
             goto ReadAgain1;
         }
         _error = errno;
