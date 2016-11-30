@@ -24,7 +24,9 @@ struct FunctorHelper
 {
     typedef std::function<FunctorHelper()> type;
     FunctorHelper(type f) : m_func(f) {}
-    operator type() { return m_func; }
+    operator type() {
+        return m_func;
+    }
     type m_func;
 };
 using StateFunc = FunctorHelper::type;
