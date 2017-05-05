@@ -51,7 +51,7 @@ public:
     /* setBaudrate - sets port baudrate (speed), return -1 in case of error.
      Parameters:
         baudrate - The speed of the port, must be positive. */
-    bool setBaudrate(int baudrate);
+    bool setBaudrate(unsigned int baudrate);
     
     /* makeRAW - configures a port to work in RAW mode, return -1 in case of error.
      Parameters:
@@ -65,7 +65,7 @@ public:
     //closePort - Closes the port, return -1 in case of error.
     int closePort();
     
-    /* readLine - attempt to read a line ended in \n and returns the number of bytes read.
+    /* readLine - attempt to read a line ended in '\n' and returns the number of bytes read.
      Return the number of bytes read, or -1 in case of error.
      Parameters:
         buf - char vector.

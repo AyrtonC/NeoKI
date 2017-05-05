@@ -77,7 +77,7 @@ int SerialCom::openPort()
     return 0;
 }
 
-bool SerialCom::setBaudrate(int baudrate)
+bool SerialCom::setBaudrate(unsigned int baudrate)
 {
     switch(baudrate) {
         case 4800:

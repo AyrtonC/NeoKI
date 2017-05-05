@@ -11,7 +11,7 @@
 		A03CBBB41D8EB0FA00D48B8B /* StateMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A03CBBB21D8EB0FA00D48B8B /* StateMachine.cpp */; };
 		A082B5001D7A54AD004282A2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B4FF1D7A54AD004282A2 /* main.cpp */; };
 		A082B5081D7A54C7004282A2 /* BBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5061D7A54C7004282A2 /* BBuffer.cpp */; };
-		A082B50B1D7A5609004282A2 /* Semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A082B5091D7A5609004282A2 /* Semaphore.cpp */; };
+		A0E780241DF084D6003CD33B /* Semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A0E780221DF084D6003CD33B /* Semaphore.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,8 +35,8 @@
 		A082B4FF1D7A54AD004282A2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		A082B5061D7A54C7004282A2 /* BBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBuffer.cpp; sourceTree = "<group>"; };
 		A082B5071D7A54C7004282A2 /* BBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BBuffer.hpp; sourceTree = "<group>"; };
-		A082B5091D7A5609004282A2 /* Semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Semaphore.cpp; sourceTree = "<group>"; };
-		A082B50A1D7A5609004282A2 /* semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = semaphore.hpp; sourceTree = "<group>"; };
+		A0E780221DF084D6003CD33B /* Semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Semaphore.cpp; sourceTree = "<group>"; };
+		A0E780231DF084D6003CD33B /* Semaphore.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Semaphore.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,10 +72,10 @@
 				A082B4FF1D7A54AD004282A2 /* main.cpp */,
 				A082B5071D7A54C7004282A2 /* BBuffer.hpp */,
 				A082B5061D7A54C7004282A2 /* BBuffer.cpp */,
-				A082B50A1D7A5609004282A2 /* semaphore.hpp */,
-				A082B5091D7A5609004282A2 /* Semaphore.cpp */,
 				A00D536D1D8B961500C3C2AD /* SerialCom.hpp */,
 				A00D536C1D8B961500C3C2AD /* SerialCom.cpp */,
+				A0E780231DF084D6003CD33B /* Semaphore.hpp */,
+				A0E780221DF084D6003CD33B /* Semaphore.cpp */,
 				A03CBBB31D8EB0FA00D48B8B /* StateMachine.hpp */,
 				A03CBBB21D8EB0FA00D48B8B /* StateMachine.cpp */,
 			);
@@ -138,10 +138,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A082B50B1D7A5609004282A2 /* Semaphore.cpp in Sources */,
 				A03CBBB41D8EB0FA00D48B8B /* StateMachine.cpp in Sources */,
 				A00D536E1D8B961500C3C2AD /* SerialCom.cpp in Sources */,
 				A082B5081D7A54C7004282A2 /* BBuffer.cpp in Sources */,
+				A0E780241DF084D6003CD33B /* Semaphore.cpp in Sources */,
 				A082B5001D7A54AD004282A2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

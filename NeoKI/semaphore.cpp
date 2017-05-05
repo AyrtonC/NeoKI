@@ -16,7 +16,7 @@
 
 Semaphore::Semaphore(std::size_t n) : _n(n)
 {
-    
+
 }
 
 void Semaphore::up()
